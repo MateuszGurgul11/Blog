@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-dark mt-3 alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close" onclick="window.location.reload();">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    {% for post in posts %}
+        <div class="container">
+            <h1>{{ post.title }}</h1>
+            <p>{{ post.pub_date.strftime('%Y-%m-%d') }}</p>
+            <p>
+                {{ post.body }}
+            </p>
+            <hr>
+        </div>
+    {% endfor %}
+{% endblock %}

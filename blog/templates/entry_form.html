@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container">
+
+        <h3>
+            Dodaj nowy wpis
+        </h3>
+    
+        <form action="" method="post">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                <label for="title">Tytul wpisu</label>
+                {{ form.title(class_="form-control") }}
+            </div>
+            <div class="form-group">
+                <label for="body">Tresc</label>
+                {{ form.body(class_="form-control", cols="100", rows="20") }}
+            </div>
+            <div class="form-check">
+                {{ form.is_published(class_="form-check-input") }}
+                <label for="is_published" class="form-check-label">Wpis opublikowany</label>
+            </div>
+            <button type="submit" class="btn btn-primary mt-5">Zapisz</button>
+        </form>
+    </div>
+    
+{% endblock %}

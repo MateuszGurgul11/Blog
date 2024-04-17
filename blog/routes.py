@@ -1,9 +1,30 @@
-from flask import render_template
+from flask import render_template, request, redirect, url_for, flash
 from blog import app
+from blog.models import Entry, db
+from blog.forms import EntryForm
 
 @app.route("/")
-def homepage():
-    return render_template("base.html")
+def index():
+   posts = Entry.query.filter_by(is_published=True).order_by(Entry.pub_date.desc())
+   return render_template("homepage.html", posts=posts)
 
-if __name__ == '__main__':
-    app.run(debug=True)
+
+@app.route("/new-post", methods=['GET', 'POST'])
+def create_entry():
+   form = EntryForm()
+   errors = None
+   if request.method == 'POST':
+      if form.validate_on_submit():
+         entry = Entry(
+            title = form.title.data,
+            body = form.body.data,
+            is_published = form.is_published.data
+         )
+         db.session.add(entry)
+         db.session.commit()
+         flash("Post zostal dodany na bloga")
+         return redirect(url_for("index"))
+      else:
+         errors = form.errors
+   return render_template("entry_form.html", form=form, errors=errors)
+
