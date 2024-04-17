@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for, flash, abort
 from blog import app
 from blog.models import Entry, db
 from blog.forms import EntryForm
@@ -9,36 +9,22 @@ def index():
    return render_template("homepage.html", posts=posts)
 
 
-@app.route("/new-post", methods=['GET', 'POST'])
-def create_entry():
-   form = EntryForm()
-   errors = None
-   if request.method == 'POST':
-      if form.validate_on_submit():
-         entry = Entry(
-            title = form.title.data,
-            body = form.body.data,
-            is_published = form.is_published.data
-         )
-         db.session.add(entry)
-         db.session.commit()
-         flash("Post zostal dodany na bloga")
-         return redirect(url_for("index"))
-      else:
-         errors = form.errors
-   return render_template("entry_form.html", form=form, errors=errors)
-
-
-@app.route("/edit-post<int:entry_id>", methods=['GET', 'POST'])
-def edit_entry(entry_id):
-   entry = Entry.query.filter_by(id=entry_id).first_or_404()
+@app.route("/post<int:entry_id>", methods=['GET', 'POST'])
+@app.route("/post", defaults={'entry_id': None}, methods=['GET', 'POST'])
+def manage_entry(entry_id):
+   entry = Entry.query.get(entry_id) if entry_id else Entry()
    form = EntryForm(obj=entry)
    errors = None
+
    if request.method == 'POST':
       if form.validate_on_submit():
+         if not entry_id:
+            db.session.add(entry)
          form.populate_obj(entry)
          db.session.commit()
+         flash("Post zostal zaktualizowany" if entry_id else "Post został dodany")
+         return redirect(url_for("index"))
       else:
-         errors = form.errors
+         errors == form.errors
+         return render_template("entry_form.html", form=form, errors=errors)
    return render_template("entry_form.html", form=form, errors=errors)
-
