@@ -85,3 +85,4 @@ def delete_entry(entry_id):
       db.session.commit()
       flash("Post zostal pomyślnie usuniety!")
       return redirect(url_for("index"))
+   
