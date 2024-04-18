@@ -17,15 +17,20 @@
             <div class="container-fluid">
                 <a class="navbar-brand" href="/">Mój blog</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('manage_entry') }}">Nowy post</a>
-                    </li>
-                </ul>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('manage_entry') }}">Nowy post</a>
+                        </li>
+                    </ul>
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success" type="submit">Search</button>
+                        {% if session.logged_in %}
+                            <form class="form-inline my-2 my-lg-0" action="{{ url_for('logout') }}" method="post">
+                                <button class="btn btn-secondary my-2 my-sm-0" type="submit">Wyloguj</button>
+                            </form>
+                        {% else %}
+                            <a class="btn btn-secondary my-2 my-lg-0" href="{{ url_for('login') }}">Zaloguj</a>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
