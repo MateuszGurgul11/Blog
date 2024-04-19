@@ -11,3 +11,7 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATION = False
     ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME", "admin")
     ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "randompassword")
+
+
+class ProductionConfig(Config):
+    DEBUG = False
